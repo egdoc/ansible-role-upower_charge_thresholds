@@ -1,0 +1,62 @@
+---
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ansible-lint
+        run: pip3 install ansible-lint
+
+      - name: Run ansible-lint
+        run: ansible-lint .
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Add vagrant gpg key
+        run: wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+      - name: Add vagrant repository
+        run: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+      - name: Install vagrant and required packages
+        run: sudo apt-get update && sudo apt-get install vagrant qemu-kvm libvirt-daemon-system libvirt-dev
+
+      - name: Start libvirtd service
+        run: sudo systemctl start libvirtd
+
+      - name: Install vagrant-libvirt plugin
+        run: vagrant plugin install vagrant-libvirt
+
+      - name: Install test dependencies
+        run: pip3 install -r test-requirements.txt
+
+      - name: Change ownership of libvirt-sock so it is accessible by runner group
+        run: sudo chown root:runner /var/run/libvirt/libvirt-sock
+
+      - name: Run molecule test
+        run: molecule test

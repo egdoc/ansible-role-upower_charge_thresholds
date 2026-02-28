@@ -1,0 +1,3 @@
+---
+upower_charge_thresholds_start_threshold: 40
+upower_charge_thresholds_stop_threshold: 50

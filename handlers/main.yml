@@ -1,0 +1,13 @@
+---
+- name: Update systemd-hwdb
+  ansible.builtin.command:
+    cmd: systemd-hwdb update
+
+- name: Request battery events from the kernel
+  ansible.builtin.command:
+    cmd: udevadm trigger
+
+- name: Ensure upower service is restarted
+  ansible.builtin.systemd_service:
+    name: upower
+    state: restarted

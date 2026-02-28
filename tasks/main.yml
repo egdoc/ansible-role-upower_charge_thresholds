@@ -1,0 +1,14 @@
+---
+- name: Ensure battery charge limits are set
+  ansible.builtin.copy:
+    content:
+      battery:*:*:dmi:*
+       CHARGE_LIMIT={{ upower_charge_thresholds_start_threshold }},{{ upower_charge_thresholds_stop_threshold }}
+    dest: /etc/udev/hwdb.d/61-battery-local.hwdb
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Update systemd-hwdb
+    - Request battery events from the kernel
+    - Ensure upower service is restarted

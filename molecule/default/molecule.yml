@@ -1,0 +1,19 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+    options:
+      memory: 512
+      cpus: 1
+platforms:
+  - name: alma10
+    box: cloud-image/almalinux-10
+    provider_raw_config_args:
+      - "video_type = 'vga'"
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Egidio Docile
+  namespace: egdoc
+  role_name: upower_charge_thresholds
+  description: Ansible role to set batteries charge thresolds on Linux using upower
+  license: GPL-2.0-or-later
+  min_ansible_version: '2.2'
+  galaxy_tags:
+    - batteries
+    - upower
+    - dbus
+
+dependencies: []

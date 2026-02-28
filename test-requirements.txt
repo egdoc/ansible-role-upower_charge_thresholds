@@ -1,0 +1,4 @@
+ansible>11,<12
+ansible-lint
+molecule==25.1.0
+molecule-vagrant

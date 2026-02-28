@@ -1,0 +1,10 @@
+---
+argument_specs:
+  main:
+    options:
+      upower_charge_thresholds_start_threshold:
+        type: int
+        default: 40
+      upower_charge_thresholds_stop_threshold:
+        type: int
+        default: 50
